@@ -52,9 +52,15 @@
         .hero { padding: 140px 20px 20px; text-align: center; }
         .hero h1 { font-size: 54px; font-weight: 800; margin-bottom: 30px; letter-spacing: -2px; background: linear-gradient(to right, var(--accent), #99aab5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .cat-bar { display: flex; justify-content: center; gap: 10px; margin-bottom: 60px; flex-wrap: wrap; }
+        .cat-bar { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
         .cat-btn { padding: 12px 28px; border-radius: 50px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-dim); cursor: pointer; font-weight: 700; transition: 0.3s; }
         .cat-btn.active { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 8px 20px var(--accent-glow); }
+
+        /* SEARCH & SORT BAR */
+        .search-container { max-width: 800px; margin: 0 auto 60px; display: flex; gap: 15px; padding: 0 20px; }
+        .search-input { flex-grow: 1; background: var(--card-bg); border: 1px solid var(--border); padding: 14px 25px; border-radius: 18px; color: var(--text-main); outline: none; transition: 0.3s; font-weight: 600; }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+        .sort-select { background: var(--card-bg); border: 1px solid var(--border); padding: 0 20px; border-radius: 18px; color: var(--text-dim); font-weight: 700; cursor: pointer; outline: none; }
 
         /* SHOP GRID */
         .container { max-width: 1200px; margin: 0 auto; padding: 0 25px 100px; }
@@ -85,28 +91,12 @@
         .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
         .card:hover .card-img { transform: scale(1.1); }
 
-        /* HOVER SIZE BADGE */
         .size-badge {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: 800;
-            opacity: 0;
-            transform: translateX(-20px);
-            transition: 0.3s ease;
-            z-index: 6;
-            border: 1px solid rgba(255,255,255,0.1);
+            position: absolute; top: 15px; left: 15px; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px);
+            color: white; padding: 6px 12px; border-radius: 10px; font-size: 11px; font-weight: 800; opacity: 0;
+            transform: translateX(-20px); transition: 0.3s ease; z-index: 6; border: 1px solid rgba(255,255,255,0.1);
         }
-        .card:hover .size-badge {
-            opacity: 1;
-            transform: translateX(0);
-        }
+        .card:hover .size-badge { opacity: 1; transform: translateX(0); }
 
         .card-body { padding: 24px; flex-grow: 1; display: flex; flex-direction: column; }
         .card-title { font-size: 19px; font-weight: 800; margin-bottom: 6px; }
@@ -114,16 +104,7 @@
         .card-footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
         .price { font-size: 20px; font-weight: 800; color: var(--accent); }
         
-        .buy-btn { 
-            background: var(--accent); 
-            color: white; 
-            border: none; 
-            padding: 10px 20px; 
-            border-radius: 12px; 
-            font-weight: 700; 
-            cursor: pointer; 
-            transition: 0.3s;
-        }
+        .buy-btn { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
         .buy-btn:hover { filter: brightness(1.2); transform: scale(1.05); }
         
         .out-of-stock-label { position: absolute; top: 15px; right: 15px; background: #ff4757; color: white; padding: 6px 14px; border-radius: 10px; font-size: 11px; font-weight: 800; z-index: 5; box-shadow: 0 4px 10px rgba(255, 71, 87, 0.4); }
@@ -148,7 +129,7 @@
 
         footer { text-align: center; padding: 60px; color: var(--text-dim); font-size: 13px; border-top: 1px solid var(--border); opacity: 0.7; }
 
-        @media (max-width: 500px) { .cart-sidebar { width: 100%; } .hero h1 { font-size: 38px; } }
+        @media (max-width: 600px) { .search-container { flex-direction: column; } .cart-sidebar { width: 100%; } .hero h1 { font-size: 38px; } }
     </style>
 </head>
 <body>
@@ -180,59 +161,57 @@
         <button class="cat-btn" onclick="tab('minecraft', this)">Minecraft</button>
         <button class="cat-btn" onclick="tab('nitro', this)">Nitro</button>
     </div>
+
+    <div class="search-container">
+        <input type="text" class="search-input" id="gameSearch" placeholder="Search for a game..." onkeyup="searchGames()">
+        <select class="sort-select" id="priceSort" onchange="sortGames()">
+            <option value="default">Sort By</option>
+            <option value="low">Price: Low to High</option>
+            <option value="high">Price: High to Low</option>
+        </select>
+    </div>
 </section>
 
 <div class="container">
     <div class="panel active" id="games">
         <div class="grid">
-            <div class="card"><div class="size-badge">120 GB</div><div class="card-img-wrap"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSR2cdSdwUWXsB_A7DGOOQGTeC9ej9WjYVidg&s" class="card-img"></div><div class="card-body"><h3 class="card-title">GTA V Premium</h3><p class="card-info">Full Access • Rockstar</p><div class="card-footer"><span class="price">999 PKR</span><button class="buy-btn" onclick="addToCart('GTA V Premium', 999)">+ Add</button></div></div></div>
+            <div class="card"><div class="size-badge">120 GB</div><div class="card-img-wrap"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSR2cdSdwUWXsB_A7DGOOQGTeC9ej9WjYVidg&s" class="card-img"></div><div class="card-body"><h3 class="card-title">GTA V Premium</h3><p class="card-info">Full Access • Rockstar</p><div class="card-footer"><span class="price" data-value="999">999 PKR</span><button class="buy-btn" onclick="addToCart('GTA V Premium', 999)">+ Add</button></div></div></div>
             
-            <div class="card"><div class="size-badge">166 GB</div><div class="card-img-wrap"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8v_xvob-nS3EEXfY_achc1Lut4BRIQkVxwg&s" class="card-img"></div><div class="card-body"><h3 class="card-title">Forza Horizon 5</h3><p class="card-info">Racing • Microsoft</p><div class="card-footer"><span class="price">999 PKR</span><button class="buy-btn" onclick="addToCart('Forza Horizon 5', 999)">+ Add</button></div></div></div>
+            <div class="card"><div class="size-badge">166 GB</div><div class="card-img-wrap"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8v_xvob-nS3EEXfY_achc1Lut4BRIQkVxwg&s" class="card-img"></div><div class="card-body"><h3 class="card-title">Forza Horizon 5</h3><p class="card-info">Racing • Microsoft</p><div class="card-footer"><span class="price" data-value="999">999 PKR</span><button class="buy-btn" onclick="addToCart('Forza Horizon 5', 999)">+ Add</button></div></div></div>
 
-            <div class="card"><div class="size-badge">92 GB</div><div class="card-img-wrap"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1293830/capsule_616x353.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Forza Horizon 4</h3><p class="card-info">Classic Racing • PC</p><div class="card-footer"><span class="price">850 PKR</span><button class="buy-btn" onclick="addToCart('Forza Horizon 4', 850)">+ Add</button></div></div></div>
+            <div class="card"><div class="size-badge">92 GB</div><div class="card-img-wrap"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1293830/capsule_616x353.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Forza Horizon 4</h3><p class="card-info">Classic Racing • PC</p><div class="card-footer"><span class="price" data-value="850">850 PKR</span><button class="buy-btn" onclick="addToCart('Forza Horizon 4', 850)">+ Add</button></div></div></div>
 
-            <div class="card"><div class="size-badge">2 GB</div><div class="card-img-wrap"><img src="https://sm.ign.com/ign_ap/cover/g/getting-ov/getting-over-it-with-bennett-foddy_3bxh.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Getting Over It</h3><p class="card-info">Bennett Foddy Classic</p><div class="card-footer"><span class="price">760 PKR</span><button class="buy-btn" onclick="addToCart('Getting Over It', 760)">+ Add</button></div></div></div>
+            <div class="card"><div class="size-badge">2 GB</div><div class="card-img-wrap"><img src="https://sm.ign.com/ign_ap/cover/g/getting-ov/getting-over-it-with-bennett-foddy_3bxh.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Getting Over It</h3><p class="card-info">Bennett Foddy Classic</p><div class="card-footer"><span class="price" data-value="760">760 PKR</span><button class="buy-btn" onclick="addToCart('Getting Over It', 760)">+ Add</button></div></div></div>
 
-            <div class="card"><div class="size-badge">8 GB</div><div class="card-img-wrap"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/756800/capsule_616x353.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Contraband Police</h3><p class="card-info">Border Control Sim</p><div class="card-footer"><span class="price">800 PKR</span><button class="buy-btn" onclick="addToCart('Contraband Police', 800)">+ Add</button></div></div></div>
+            <div class="card"><div class="size-badge">8 GB</div><div class="card-img-wrap"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/756800/capsule_616x353.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Contraband Police</h3><p class="card-info">Border Control Sim</p><div class="card-footer"><span class="price" data-value="800">800 PKR</span><button class="buy-btn" onclick="addToCart('Contraband Police', 800)">+ Add</button></div></div></div>
 
-            <div class="card"><div class="size-badge">47 GB</div><div class="card-img-wrap"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1811260/capsule_616x353.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">FIFA 23</h3><p class="card-info">Football Key • PC</p><div class="card-footer"><span class="price">950 PKR</span><button class="buy-btn" onclick="addToCart('FIFA 23', 950)">+ Add</button></div></div></div>
+            <div class="card"><div class="size-badge">47 GB</div><div class="card-img-wrap"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1811260/capsule_616x353.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">FIFA 23</h3><p class="card-info">Football Key • PC</p><div class="card-footer"><span class="price" data-value="950">950 PKR</span><button class="buy-btn" onclick="addToCart('FIFA 23', 950)">+ Add</button></div></div></div>
 
-            <div class="card"><div class="size-badge">8 GB</div><div class="card-img-wrap"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/815370/capsule_616x353.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Green Hell</h3><p class="card-info">Survival • Jungle</p><div class="card-footer"><span class="price">650 PKR</span><button class="buy-btn" onclick="addToCart('Green Hell', 650)">+ Add</button></div></div></div>
+            <div class="card"><div class="size-badge">8 GB</div><div class="card-img-wrap"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/815370/capsule_616x353.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Green Hell</h3><p class="card-info">Survival • Jungle</p><div class="card-footer"><span class="price" data-value="650">650 PKR</span><button class="buy-btn" onclick="addToCart('Green Hell', 650)">+ Add</button></div></div></div>
 
-            <div class="card"><div class="size-badge">71 GB</div><div class="card-img-wrap"><img src="https://cdn-hogwartslegacy.warnerbrosgames.com/community/slide-07.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Hogwarts Legacy</h3><p class="card-info">Magic RPG • PC</p><div class="card-footer"><span class="price">760 PKR</span><button class="buy-btn" onclick="addToCart('Hogwarts Legacy', 760)">+ Add</button></div></div></div>
+            <div class="card"><div class="size-badge">71 GB</div><div class="card-img-wrap"><img src="https://cdn-hogwartslegacy.warnerbrosgames.com/community/slide-07.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Hogwarts Legacy</h3><p class="card-info">Magic RPG • PC</p><div class="card-footer"><span class="price" data-value="760">760 PKR</span><button class="buy-btn" onclick="addToCart('Hogwarts Legacy', 760)">+ Add</button></div></div></div>
 
-            <div class="card"><div class="size-badge">112 GB</div><div class="card-img-wrap"><img src="https://images.dwncdn.net/images/t_app-icon-l/p/524e245d-266d-413d-8c6f-6b92c3280314/3402058482/tekken-8-logo" class="card-img"></div><div class="card-body"><h3 class="card-title">Tekken 8</h3><p class="card-info">Fighting Key • PC</p><div class="card-footer"><span class="price">760 PKR</span><button class="buy-btn" onclick="addToCart('Tekken 8', 760)">+ Add</button></div></div></div>
+            <div class="card"><div class="size-badge">112 GB</div><div class="card-img-wrap"><img src="https://images.dwncdn.net/images/t_app-icon-l/p/524e245d-266d-413d-8c6f-6b92c3280314/3402058482/tekken-8-logo" class="card-img"></div><div class="card-body"><h3 class="card-title">Tekken 8</h3><p class="card-info">Fighting Key • PC</p><div class="card-footer"><span class="price" data-value="760">760 PKR</span><button class="buy-btn" onclick="addToCart('Tekken 8', 760)">+ Add</button></div></div></div>
             
-            <div class="card"><div class="size-badge">25 GB</div><div class="card-img-wrap"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2141730/512f1323feb843c8cc3a67e3f6f23290a9f8ecd6/capsule_616x353.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Escape Backrooms</h3><p class="card-info">Multiplayer Horror</p><div class="card-footer"><span class="price">199 PKR</span><button class="buy-btn" onclick="addToCart('Escape Backrooms', 199)">+ Add</button></div></div></div>
+            <div class="card"><div class="size-badge">25 GB</div><div class="card-img-wrap"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2141730/512f1323feb843c8cc3a67e3f6f23290a9f8ecd6/capsule_616x353.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Escape Backrooms</h3><p class="card-info">Multiplayer Horror</p><div class="card-footer"><span class="price" data-value="199">199 PKR</span><button class="buy-btn" onclick="addToCart('Escape Backrooms', 199)">+ Add</button></div></div></div>
 
-            <div class="card">
-                <div class="size-badge">5 GB</div>
-                <div class="card-img-wrap">
-                    <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3672720/298ca32cc97f7f513e95461dd3cb1b11eb9c13d1/header.jpg?t=1770828197" class="card-img">
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title">Prison Escape Simulator</h3>
-                    <p class="card-info">Dig Out • Strategy • PC</p>
-                    <div class="card-footer">
-                        <span class="price">760 PKR</span>
-                        <button class="buy-btn" onclick="addToCart('Prison Escape Simulator: Dig Out', 760)">+ Add</button>
-                    </div>
-                </div>
-            </div>
+            <div class="card"><div class="size-badge">5 GB</div><div class="card-img-wrap"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1063060/capsule_616x353.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Prison Escape Simulator</h3><p class="card-info">Dig Out • Strategy • PC</p><div class="card-footer"><span class="price" data-value="800">800 PKR</span><button class="buy-btn" onclick="addToCart('Prison Escape Simulator: Dig Out', 800)">+ Add</button></div></div></div>
+
+            <div class="card"><div class="size-badge">66 GB</div><div class="card-img-wrap"><img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1715690/capsule_616x353.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Poppy Playtime</h3><p class="card-info">Horror • Puzzle • PC</p><div class="card-footer"><span class="price" data-value="500">500 PKR</span><button class="buy-btn" onclick="addToCart('Poppy Playtime', 500)">+ Add</button></div></div></div>
         </div>
     </div>
 
     <div class="panel" id="minecraft">
         <div class="grid">
-            <div class="card"><div class="size-badge">NA GB</div><div class="card-img-wrap"><img src="https://assets.xboxservices.com/assets/0e/f8/0ef8df5c-a7dd-4eb3-b11a-743058d93953.jpg?n=Minecraft_GLP-Page-Hero-1084_Titan-Update_1920x1080_01.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Minecraft Java</h3><p class="card-info">PC Full Access</p><div class="card-footer"><span class="price">2000 PKR</span><button class="buy-btn" onclick="addToCart('Minecraft Java', 2000)">+ Add</button></div></div></div>
-            <div class="card"><div class="size-badge">NA GB</div><div class="card-img-wrap"><img src="https://assets.xboxservices.com/assets/0e/f8/0ef8df5c-a7dd-4eb3-b11a-743058d93953.jpg?n=Minecraft_GLP-Page-Hero-1084_Titan-Update_1920x1080_01.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Minecraft Bedrock</h3><p class="card-info">Windows License</p><div class="card-footer"><span class="price">520 PKR</span><button class="buy-btn" onclick="addToCart('Minecraft Bedrock', 520)">+ Add</button></div></div></div>
-            <div class="card"><div class="size-badge">NA GB</div><div class="card-img-wrap"><img src="https://assets.xboxservices.com/assets/0e/f8/0ef8df5c-a7dd-4eb3-b11a-743058d93953.jpg?n=Minecraft_GLP-Page-Hero-1084_Titan-Update_1920x1080_01.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Minecraft Pocket</h3><p class="card-info">Android & iOS</p><div class="card-footer"><span class="price">520 PKR</span><button class="buy-btn" onclick="addToCart('Minecraft Pocket', 520)">+ Add</button></div></div></div>
+            <div class="card"><div class="size-badge">NA GB</div><div class="card-img-wrap"><img src="https://assets.xboxservices.com/assets/0e/f8/0ef8df5c-a7dd-4eb3-b11a-743058d93953.jpg?n=Minecraft_GLP-Page-Hero-1084_Titan-Update_1920x1080_01.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Minecraft Java</h3><p class="card-info">PC Full Access</p><div class="card-footer"><span class="price" data-value="2000">2000 PKR</span><button class="buy-btn" onclick="addToCart('Minecraft Java', 2000)">+ Add</button></div></div></div>
+            <div class="card"><div class="size-badge">NA GB</div><div class="card-img-wrap"><img src="https://assets.xboxservices.com/assets/0e/f8/0ef8df5c-a7dd-4eb3-b11a-743058d93953.jpg?n=Minecraft_GLP-Page-Hero-1084_Titan-Update_1920x1080_01.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Minecraft Bedrock</h3><p class="card-info">Windows License</p><div class="card-footer"><span class="price" data-value="520">520 PKR</span><button class="buy-btn" onclick="addToCart('Minecraft Bedrock', 520)">+ Add</button></div></div></div>
+            <div class="card"><div class="size-badge">NA GB</div><div class="card-img-wrap"><img src="https://assets.xboxservices.com/assets/0e/f8/0ef8df5c-a7dd-4eb3-b11a-743058d93953.jpg?n=Minecraft_GLP-Page-Hero-1084_Titan-Update_1920x1080_01.jpg" class="card-img"></div><div class="card-body"><h3 class="card-title">Minecraft Pocket</h3><p class="card-info">Android & iOS</p><div class="card-footer"><span class="price" data-value="520">520 PKR</span><button class="buy-btn" onclick="addToCart('Minecraft Pocket', 520)">+ Add</button></div></div></div>
         </div>
     </div>
 
     <div class="panel" id="nitro">
         <div class="grid">
-            <div class="card"><div class="out-of-stock-label">SOLD OUT</div><div class="card-body" style="text-align:center; padding:60px 20px;"><h3 class="card-title">Nitro Monthly</h3><p class="card-info">Global Subscription</p><div class="price" style="text-decoration:line-through; opacity:0.4;">720 PKR</div><button class="buy-btn" style="background:#333; cursor:not-allowed;" disabled>Out of Stock</button></div></div>
+            <div class="card"><div class="out-of-stock-label">SOLD OUT</div><div class="card-body" style="text-align:center; padding:60px 20px;"><h3 class="card-title">Nitro Monthly</h3><p class="card-info">Global Subscription</p><div class="price">720 PKR</div><button class="buy-btn" style="background:#333; cursor:not-allowed;" disabled>Out of Stock</button></div></div>
         </div>
     </div>
 </div>
@@ -251,9 +230,21 @@
             <label>Payment Method *</label>
             <select id="formPayment" required>
                 <option value="" disabled selected>Select Method</option>
-                <optgroup label="Pakistan (PK)"><option value="EasyPaisa">EasyPaisa</option><option value="SadaPay">SadaPay</option><option value="JazzCash">JazzCash</option></optgroup>
-                <optgroup label="India (IN)"><option value="PhonePe">PhonePe</option><option value="GPay">GPay</option><option value="FamPay">FamPay</option></optgroup>
-                <optgroup label="International"><option value="PayPal">PayPal</option><option value="Crypto">Crypto</option></optgroup>
+                <optgroup label="Pakistan (PK)">
+                    <option value="EasyPaisa">EasyPaisa</option>
+                    <option value="SadaPay">SadaPay</option>
+                    <option value="JazzCash">JazzCash</option>
+                    <option value="Bank Transfer">Bank Transfer (PK)</option>
+                </optgroup>
+                <optgroup label="India (IN)">
+                    <option value="PhonePe">PhonePe</option>
+                    <option value="GPay">GPay</option>
+                    <option value="FamPay">FamPay</option>
+                </optgroup>
+                <optgroup label="International">
+                    <option value="PayPal">PayPal</option>
+                    <option value="Crypto">Crypto</option>
+                </optgroup>
             </select>
 
             <label>Coupon Code (Optional)</label>
@@ -281,14 +272,46 @@
     const webhook = "https://discord.com/api/webhooks/1478763641116557313/P_KVlAgyP2TrWXz1sDQ2tC-t9DQMvf9LeJx31EukLu2T5kVq4GvlcSaRXRgqQ3hYMwfP";
 
     function toggleTheme() { document.body.classList.toggle('light-theme'); }
+    
     function tab(id, btn) {
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active'); btn.classList.add('active');
+        searchGames(); 
     }
+
+    function searchGames() {
+        const query = document.getElementById('gameSearch').value.toLowerCase();
+        const activePanel = document.querySelector('.panel.active');
+        const cards = activePanel.querySelectorAll('.card');
+        
+        cards.forEach(card => {
+            const title = card.querySelector('.card-title').innerText.toLowerCase();
+            card.style.display = title.includes(query) ? "flex" : "none";
+        });
+    }
+
+    function sortGames() {
+        const sortType = document.getElementById('priceSort').value;
+        const activePanel = document.querySelector('.panel.active .grid');
+        const cards = Array.from(activePanel.querySelectorAll('.card'));
+
+        if (sortType === 'default') return;
+
+        cards.sort((a, b) => {
+            const priceA = parseInt(a.querySelector('.price').getAttribute('data-value')) || 0;
+            const priceB = parseInt(b.querySelector('.price').getAttribute('data-value')) || 0;
+            return sortType === 'low' ? priceA - priceB : priceB - priceA;
+        });
+
+        activePanel.innerHTML = "";
+        cards.forEach(card => activePanel.appendChild(card));
+    }
+
     function toggleCart() { document.getElementById('cartSidebar').classList.toggle('open'); }
     function addToCart(name, price) { cart.push({ id: Date.now(), name, price }); updateUI(); if(!document.getElementById('cartSidebar').classList.contains('open')) toggleCart(); }
     function removeFromCart(id) { cart = cart.filter(i => i.id !== id); updateUI(); }
+    
     function updateUI() {
         const list = document.getElementById('cartItems');
         let sum = 0; list.innerHTML = "";
@@ -300,12 +323,14 @@
         document.getElementById('cartBadge').innerText = cart.length;
         document.getElementById('cartBadge').style.display = cart.length > 0 ? "block" : "none";
     }
+
     function openCheckout() {
         if(cart.length === 0) return alert("Your cart is empty!");
         document.getElementById('checkoutOverlay').style.display = 'flex';
         document.getElementById('checkoutModal').style.display = 'block';
         document.getElementById('receiptModal').style.display = 'none';
     }
+
     function closeModals() { document.getElementById('checkoutOverlay').style.display = 'none'; }
 
     document.getElementById('orderForm').onsubmit = async (e) => {
@@ -345,5 +370,3 @@
 </script>
 </body>
 </html>
-
-
