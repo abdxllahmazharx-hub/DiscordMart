@@ -111,7 +111,7 @@
         .card-title { font-size: 19px; font-weight: 800; margin-bottom: 6px; }
         .card-info { font-size: 13px; color: var(--text-dim); margin-bottom: 20px; }
 
-        .fathom-select {
+        .fathom-select, .member-select {
             width: 100%;
             background: var(--input-bg);
             border: 1px solid var(--border);
@@ -175,6 +175,7 @@
     <div class="cat-bar">
         <button class="cat-btn active" onclick="tab('games', this)">Video Games</button>
         <button class="cat-btn" onclick="tab('minecraft', this)">Minecraft</button>
+        <button class="cat-btn" onclick="tab('subscriptions', this)">Subscriptions</button>
         <button class="cat-btn" onclick="tab('nitro', this)">Nitro</button>
     </div>
 
@@ -268,6 +269,53 @@
         </div>
     </div>
 
+    <div class="panel" id="subscriptions">
+        <div class="grid">
+            <div class="card">
+                <div class="status-badge badge-hot">FAST</div>
+                <div class="card-img-wrap"><img src="https://d1lss44hh2trtw.cloudfront.net/assets/article/2025/06/19/discord-server-logo_feature.jpg" class="card-img"></div>
+                <div class="card-body">
+                    <h3 class="card-title">Discord Members</h3>
+                    <p class="card-info">100 Fake Members</p>
+                    <select class="member-select" id="memberType" onchange="updateMemberPrice()">
+                        <option value="Online">Online Members (200 PKR)</option>
+                        <option value="Offline">Offline Members (150 PKR)</option>
+                    </select>
+                    <div class="card-footer">
+                        <span class="price" id="memberPriceDisplay" data-value="200">200 PKR</span>
+                        <button class="buy-btn" onclick="addMembersToCart()">+ Add</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="status-badge badge-hot">ULTRA</div>
+                <div class="card-img-wrap"><img src="https://images.dubizzle.com.bh/thumbnails/4668856-600x450.jpeg" class="card-img"></div>
+                <div class="card-body">
+                    <h3 class="card-title">Netflix Premium</h3>
+                    <p class="card-info">Private Screen • 4K UHD</p>
+                    <div class="card-footer">
+                        <span class="price" data-value="1000">1000 PKR</span>
+                        <button class="buy-btn" onclick="addToCart('Netflix Premium (1 Month)', 1000)">+ Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="status-badge badge-new">PRO</div>
+                <div class="card-img-wrap"><img src="https://i0.wp.com/pakdigital.pk/wp-content/uploads/2025/08/CapCut-Pro.jpg" class="card-img"></div>
+                <div class="card-body">
+                    <h3 class="card-title">CapCut Pro</h3>
+                    <p class="card-info">Global Account • All Effects</p>
+                    <div class="card-footer">
+                        <span class="price" data-value="1200">1200 PKR</span>
+                        <button class="buy-btn" onclick="addToCart('CapCut Pro Subscription', 1200)">+ Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="panel" id="nitro">
         <div class="grid">
             <div class="card"><div class="out-of-stock-label">SOLD OUT</div><div class="card-body" style="text-align:center; padding:60px 20px;"><h3 class="card-title">Nitro Monthly</h3><p class="card-info">Global Subscription</p><div class="price">720 PKR</div><button class="buy-btn" style="background:#333; cursor:not-allowed;" disabled>Out of Stock</button></div></div>
@@ -312,6 +360,20 @@
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active'); btn.classList.add('active');
+    }
+
+    function updateMemberPrice() {
+        const type = document.getElementById('memberType').value;
+        const display = document.getElementById('memberPriceDisplay');
+        const price = type === "Online" ? 200 : 150;
+        display.innerText = `${price} PKR`;
+        display.setAttribute('data-value', price);
+    }
+
+    function addMembersToCart() {
+        const type = document.getElementById('memberType').value;
+        const price = parseInt(document.getElementById('memberPriceDisplay').getAttribute('data-value'));
+        addToCart(`100 Discord Members (${type})`, price);
     }
 
     function searchGames() {
