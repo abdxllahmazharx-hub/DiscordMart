@@ -4,6 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discord Mart | Premium Store</title>
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com/">
+    <meta property="og:title" content="Discord Mart | Premium Store">
+    <meta property="og:description" content="Buy cheap games, Discord services, and subscriptions instantly.">
+    <meta property="og:image" content="https://yourwebsite.com/image_a963f2.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://yourwebsite.com/">
+    <meta name="twitter:title" content="Discord Mart | Premium Store">
+    <meta name="twitter:description" content="Buy cheap games, Discord services, and subscriptions instantly.">
+    <meta name="twitter:image" content="https://yourwebsite.com/image_a963f2.jpg">
+
+    <meta name="theme-color" content="#5865F2">
+
     <link rel="icon" type="image/png" href="https://cdn.dribbble.com/userupload/17039932/file/original-983633d1f6de58f5d871f174ff34f057.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -142,6 +157,7 @@
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 20px; }
         .modal { background: var(--card-bg); width: 100%; max-width: 480px; padding: 40px; border-radius: 36px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
         .modal input, .modal select { width: 100%; background: var(--input-bg); border: 1px solid var(--border); padding: 16px; border-radius: 14px; color: var(--text-main); margin-bottom: 18px; outline: none; }
+        .modal label { font-size: 12px; font-weight: 800; color: var(--text-dim); margin-left: 5px; text-transform: uppercase; }
 
         footer { text-align: center; padding: 60px; color: var(--text-dim); font-size: 13px; border-top: 1px solid var(--border); opacity: 0.7; }
 
@@ -325,26 +341,59 @@
 
 <div class="overlay" id="checkoutOverlay">
     <div class="modal" id="checkoutModal">
-        <h2>Checkout Details</h2>
+        <h2 style="margin-bottom: 20px; font-weight: 800;">Checkout</h2>
         <form id="orderForm">
             <label>Discord Username *</label>
-            <input type="text" id="formDiscord" placeholder="e.g. gamer#1234" required>
+            <input type="text" id="formDiscord" placeholder="e.g. abdul#1234" required>
+            
+            <label>WhatsApp Number (Optional)</label>
+            <input type="text" id="formWhatsapp" placeholder="e.g. +92 300 1234567">
+
             <label>Payment Method *</label>
-            <select id="formPayment" required style="width:100%; padding:15px; background:var(--input-bg); color:var(--text-main); border-radius:12px; border:1px solid var(--border); margin-bottom:15px;">
-                <option value="EasyPaisa">EasyPaisa</option>
-                <option value="SadaPay">SadaPay</option>
-                <option value="JazzCash">JazzCash</option>
-                <option value="PayPal">PayPal / Crypto</option>
+            <select id="formPayment" required>
+                <optgroup label="Pakistan">
+                    <option value="EasyPaisa">EasyPaisa</option>
+                    <option value="SadaPay">SadaPay</option>
+                    <option value="JazzCash">JazzCash</option>
+                </optgroup>
+                <optgroup label="India">
+                    <option value="UPI (India)">All Type of UPI</option>
+                </optgroup>
+                <optgroup label="Bangladesh">
+                    <option value="BKASH">BKASH</option>
+                    <option value="NAGOD">NAGOD</option>
+                    <option value="NPSB Bank (BD)">All NPSB Bank</option>
+                </optgroup>
+                <optgroup label="Nepal">
+                    <option value="ESEWA">ESEWA</option>
+                </optgroup>
+                <optgroup label="International">
+                    <option value="PayPal">PayPal</option>
+                    <option value="Crypto">Crypto</option>
+                    <option value="Bank Transfer">Bank-Transfer</option>
+                </optgroup>
             </select>
-            <button type="submit" class="buy-btn" style="width:100%; padding:16px;">Place Order</button>
+
+            <label>Coupon Code (Optional)</label>
+            <input type="text" id="formCoupon" placeholder="Enter code if any">
+
+            <button type="submit" class="buy-btn" style="width:100%; padding:16px; margin-top: 10px;">Place Order</button>
             <button type="button" onclick="closeModals()" style="width:100%; margin-top:10px; background:none; border:none; color:#ff4757; cursor:pointer; font-weight:bold;">Cancel</button>
         </form>
     </div>
-    <div class="modal" id="receiptModal" style="display:none; text-align:center;">
-        <div style="font-size: 50px;">✅</div>
-        <h2>Order Received!</h2>
-        <div class="receipt-id" id="receiptOrderDetails" style="background:var(--input-bg); padding:15px; border-radius:10px; margin:15px 0; font-family:monospace;"></div>
+
+    <div class="modal" id="receiptModal" style="display:none; text-align:center; position: relative;">
+        <div onclick="location.reload()" style="position: absolute; top: 20px; right: 25px; font-size: 28px; cursor: pointer; color: var(--text-dim); font-weight: 400; line-height: 1;">&times;</div>
+        
+        <div style="font-size: 50px; margin-top: 10px;">✅</div>
+        <h2 style="font-weight: 800;">Order Received!</h2>
+        <p style="color: var(--text-dim); margin-bottom: 15px;">Your order has been recorded.</p>
+        <div class="receipt-id" id="receiptOrderDetails" style="background:var(--input-bg); padding:15px; border-radius:18px; margin:15px 0; font-family:monospace; text-align: left; font-size: 13px; border: 1px solid var(--border);"></div>
+        
+        <p style="font-weight: 700; margin-bottom: 20px; color: var(--accent);">Please open a ticket on our Discord to complete the payment.</p>
+        
         <a href="https://discord.gg/x6c5aTtcpn" target="_blank" class="buy-btn" style="display:block; text-decoration:none;">Open Ticket on Discord</a>
+        <p style="font-size: 11px; margin-top: 15px; color: var(--text-dim);">You can close this window now.</p>
     </div>
 </div>
 
@@ -435,18 +484,35 @@
     document.getElementById('orderForm').onsubmit = async (e) => {
         e.preventDefault();
         const user = document.getElementById('formDiscord').value;
+        const whatsapp = document.getElementById('formWhatsapp').value || "Not provided";
         const method = document.getElementById('formPayment').value;
+        const coupon = document.getElementById('formCoupon').value || "None";
         const items = cart.map(i => i.name).join(", ");
         const total = document.getElementById('totalDisplay').innerText;
         const orderID = "MART-" + Math.floor(Math.random() * 9999);
 
-        const data = { embeds: [{ title: "📦 NEW ORDER: " + orderID, color: 5814783, fields: [{ name: "User", value: user }, { name: "Items", value: items }, { name: "Total", value: total }] }] };
+        const data = { 
+            embeds: [{ 
+                title: "📦 NEW ORDER: " + orderID, 
+                color: 5814783, 
+                fields: [
+                    { name: "Discord User", value: user, inline: true }, 
+                    { name: "WhatsApp", value: whatsapp, inline: true }, 
+                    { name: "Payment Method", value: method, inline: true },
+                    { name: "Coupon", value: coupon, inline: true },
+                    { name: "Total Amount", value: total, inline: true },
+                    { name: "Ordered Items", value: items }
+                ],
+                footer: { text: "Open ticket to complete" },
+                timestamp: new Date()
+            }] 
+        };
 
         try {
             await fetch(webhook, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
             document.getElementById('checkoutModal').style.display = 'none';
             document.getElementById('receiptModal').style.display = 'block';
-            document.getElementById('receiptOrderDetails').innerText = `ID: ${orderID}\nItems: ${items}\nTotal: ${total}\nUser: ${user}`;
+            document.getElementById('receiptOrderDetails').innerText = `Order ID: ${orderID}\nItems: ${items}\nTotal: ${total}\nMethod: ${method}\nDiscord: ${user}\nWhatsApp: ${whatsapp}\nCoupon: ${coupon}`;
             cart = []; updateUI();
         } catch (err) { alert("Error sending order."); }
     };
