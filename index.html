@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Discord Mart | Premium Store</title>
 
-    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Discord Mart | Premium Store">
     <meta property="og:description" content="Buy cheap games, Discord services, and subscriptions instantly.">
     <meta property="og:image" content="Gemini_Generated_Image_q1z42fq1z42fq1z4.png">
 
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Discord Mart | Premium Store">
     <meta name="twitter:description" content="Buy cheap games, Discord services, and subscriptions instantly.">
@@ -23,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-   
+    
     <style>
         :root {
             --bg: #f5f6fa;
@@ -337,6 +335,19 @@
     <div class="panel" id="nitro">
         <div class="grid">
             <div class="card"><div class="out-of-stock-label">SOLD OUT</div><div class="card-body" style="text-align:center; padding:60px 20px;"><h3 class="card-title">Nitro Monthly</h3><p class="card-info">Global Subscription</p><div class="price">720 PKR</div><button class="buy-btn" style="background:#333; cursor:not-allowed;" disabled>Out of Stock</button></div></div>
+            
+            <div class="card">
+                <div class="status-badge badge-hot">HOT</div>
+                <div class="card-img-wrap"><img src="https://cdn.ggmax.com.br/images/837165d38baa511cbdfc8d361385135f.sm.jpg" class="card-img"></div>
+                <div class="card-body">
+                    <h3 class="card-title">14x Server Boost</h3>
+                    <p class="card-info">Discord Server Boosts</p>
+                    <div class="card-footer">
+                        <span class="price" data-value="1700">1700 PKR</span>
+                        <button class="buy-btn" onclick="addToCart('14x Server Boost', 1700)">+ Add</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -491,32 +502,47 @@
         const coupon = document.getElementById('formCoupon').value || "None";
         const items = cart.map(i => i.name).join(", ");
         const total = document.getElementById('totalDisplay').innerText;
-        const orderID = "MART-" + Math.floor(Math.random() * 9999);
-
-        const data = { 
-            embeds: [{ 
-                title: "📦 NEW ORDER: " + orderID, 
-                color: 5814783, 
-                fields: [
-                    { name: "Discord User", value: user, inline: true }, 
-                    { name: "WhatsApp", value: whatsapp, inline: true }, 
-                    { name: "Payment Method", value: method, inline: true },
-                    { name: "Coupon", value: coupon, inline: true },
-                    { name: "Total Amount", value: total, inline: true },
-                    { name: "Ordered Items", value: items }
-                ],
-                footer: { text: "Open ticket to complete" },
-                timestamp: new Date()
-            }] 
+        
+        // --- Completed logic to send payload to your Discord webhook ---
+        const payload = {
+            content: null,
+            embeds: [
+                {
+                    title: "🛒 New Order Received!",
+                    color: 7419530,
+                    fields: [
+                        { name: "Discord", value: user, inline: true },
+                        { name: "WhatsApp", value: whatsapp, inline: true },
+                        { name: "Payment Method", value: method, inline: true },
+                        { name: "Coupon", value: coupon, inline: true },
+                        { name: "Items", value: items },
+                        { name: "Total Amount", value: total }
+                    ],
+                    timestamp: new Date().toISOString()
+                }
+            ]
         };
 
         try {
-            await fetch(webhook, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+            await fetch(webhook, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            
             document.getElementById('checkoutModal').style.display = 'none';
             document.getElementById('receiptModal').style.display = 'block';
-            document.getElementById('receiptOrderDetails').innerText = `Order ID: ${orderID}\nItems: ${items}\nTotal: ${total}\nMethod: ${method}\nDiscord: ${user}\nWhatsApp: ${whatsapp}\nCoupon: ${coupon}`;
-            cart = []; updateUI();
-        } catch (err) { alert("Error sending order."); }
+            
+            // Generate a random order ID for the user
+            const orderId = Math.floor(Math.random() * 90000) + 10000;
+            document.getElementById('receiptOrderDetails').innerHTML = `<strong>Order ID:</strong> #${orderId}<br><strong>Items:</strong> ${items}<br><strong>Total:</strong> ${total}`;
+            
+            // Clear cart
+            cart = [];
+            updateUI();
+        } catch (error) {
+            alert("Error placing order. Please try again or open a ticket.");
+        }
     };
 </script>
 </body>
