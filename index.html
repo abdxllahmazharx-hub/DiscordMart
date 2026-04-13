@@ -287,6 +287,26 @@
 
     <div class="panel" id="subscriptions">
         <div class="grid">
+<div class="card">
+    <div class="status-badge badge-hot">TRENDING</div>
+    <div class="card-img-wrap">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" class="card-img">
+    </div>
+    <div class="card-body">
+        <h3 class="card-title">Instagram</h3>
+        <p class="card-info">Followers & Likes • Instant</p>
+
+        <select class="member-select" id="instaType" onchange="updateInstaPrice()">
+            <option value="followers">100 Followers (390 PKR)</option>
+            <option value="likes">100 Likes (290 PKR)</option>
+        </select>
+
+        <div class="card-footer">
+            <span class="price" id="instaPriceDisplay" data-value="390">390 PKR</span>
+            <button class="buy-btn" onclick="addInstaToCart()">+ Add</button>
+        </div>
+    </div>
+</div>
             <div class="card">
                 <div class="status-badge badge-hot">FAST</div>
                 <div class="card-img-wrap"><img src="https://d1lss44hh2trtw.cloudfront.net/assets/article/2025/06/19/discord-server-logo_feature.jpg" class="card-img"></div>
